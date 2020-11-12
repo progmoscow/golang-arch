@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -14,7 +15,18 @@ type person struct {
 func main() {
 
 	http.HandleFunc("/encode", foo)
+	http.HandleFunc("/decode", bar)
 	http.ListenAndServe(":8000", nil)
+}
+
+func bar(w http.ResponseWriter, r *http.Request) {
+	people := []person{}
+	err := json.NewDecoder(r.Body).Decode(&people)
+
+	if err != nil {
+		log.Println("Bad data to decode", err)
+	}
+	fmt.Println(people)
 }
 
 func foo(w http.ResponseWriter, r *http.Request) {
