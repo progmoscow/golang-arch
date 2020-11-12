@@ -7,8 +7,8 @@ import (
 )
 
 type person struct {
-	First string
-	Admin bool
+	Name string
+	Age  int
 }
 
 func main() {
@@ -40,16 +40,22 @@ func main() {
 
 func foo(w http.ResponseWriter, r *http.Request) {
 	person01 := person{
-		Name : "Tom",
-		Age : 20
+		Name: "Tom",
+		Age:  20,
 	}
 
 	err := json.NewEncoder(w).Encode(person01)
 	if err != nil {
-		log.Println("Encode bad data", err)	
+		log.Println("Encode bad data", err)
 	}
 }
 
 func bar(w http.ResponseWriter, r *http.Request) {
+	var person01 person
+	err := json.NewDecoder(r.Body).Decode(&person01)
 
+	if err != nil {
+		log.Println("Decode bad data!", err)
+	}
+	log.Println("Person:", person01)
 }
